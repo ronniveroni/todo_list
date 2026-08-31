@@ -14,7 +14,7 @@
     <h2>You have {{ num_tasks_not_started }} task(s) to complete!</h2>
 </div>
 <div class="d-flex justify-content-center">
-    <table class="table w-10 ">
+    <table class="table w-100">
   <thead>
     <tr>
       <th scope="col">#</th>
@@ -29,7 +29,9 @@
         {% for task in tasks %}
         <tr>
       <th scope="row">{{ forloop.counter }}</th>
-      <td>{{ task.name }}</td>
+      <td class="{% if task.status == 'c' %}text-decoration-line-through{% endif %}">
+    {{ task.name }}
+</td>
       <td> {% for tag in task.tags.all %}
           <span class="badge bg-light text-dark">
           {{ tag.name }}

@@ -39,3 +39,9 @@ class UserTaskListView(LoginRequiredMixin, generic.ListView):
         context['num_tasks_in_progress'] = tasks.filter(status='p').count()
 
         return context
+
+class UserTaskCreateView(LoginRequiredMixin, generic.CreateView):
+    model = Task
+    fields = ['name', 'content','user','tags', 'status']
+    template_name = "user_task_form.html"
+    success_url = reverse_lazy('user_tasks')

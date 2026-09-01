@@ -21,6 +21,7 @@ class Task(models.Model):
     tags = models.ManyToManyField(Tag, blank=True)
 
     class Meta:
+        ordering = ['-pk']
         verbose_name = 'Task'
         verbose_name_plural = 'Tasks'
 

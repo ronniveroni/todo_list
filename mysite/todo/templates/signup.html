@@ -1,17 +1,17 @@
 {% extends 'base.html' %}
 
 
-{% block title %}Registracija{% endblock %}
+{% block title %}Registration {% endblock %}
 
 {% block content %}
 
-<h1>Registracija:</h1>
+<h1>Registration:</h1>
 
 <form method="post">
     {% csrf_token %}
     {% load crispy_forms_tags %}
     {{ form | crispy }}
-    <button class="btn btn-primary" type="submit">Registruotis</button>
+    <button class="btn btn-primary" type="submit">Register</button>
 
 </form>
 

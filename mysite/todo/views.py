@@ -7,11 +7,13 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
 # Create your views here.
 def index(request):
+    tasks = Task.objects.filter(user__isnull=True)
     context = {
-    'tasks': Task.objects.all(),
-    'num_tasks_not_started': Task.objects.filter(status='n').count(),
-        'num_tasks_completed': Task.objects.filter(status='c').count(),
-        'num_tasks_in_progress': Task.objects.filter(status='p').count(),
+    'tasks': tasks,
+    'num_tasks_not_started': tasks.filter(status='n').count(),
+        'num_tasks_completed': tasks.filter(status='c').count(),
+        'num_tasks_in_progress': tasks.filter(status='p').count(),
+        'num_tasks_active':  tasks.filter(status='n').count() + tasks.filter(status='p').count(),
     }
     return render(request, template_name='index.html', context=context)
 
@@ -37,6 +39,7 @@ class UserTaskListView(LoginRequiredMixin, generic.ListView):
         context['num_tasks_not_started'] = tasks.filter(status='n').count()
         context['num_tasks_completed'] = tasks.filter(status='c').count()
         context['num_tasks_in_progress'] = tasks.filter(status='p').count()
+        context['num_tasks_active'] = tasks.filter(status='n').count() + tasks.filter(status='p').count()
 
         return context
 

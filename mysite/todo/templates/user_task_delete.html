@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+
+{% block title %} Taisymo pašalinimas {% endblock %}
+{% block content %}
+<h1>Ar tikrai norite pašalinti? "{{ task.name }}".</h1>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-primary">Taip</button>
+   <a href="{% url 'user_tasks' %}" class="btn btn-secondary">Ne</a>
+
+{% endblock %}

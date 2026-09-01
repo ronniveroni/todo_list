@@ -3,7 +3,7 @@ from django.views import generic
 from django.shortcuts import render
 from todo.models import Task
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
 # Create your views here.
 def index(request):
@@ -50,3 +50,12 @@ class UserTaskCreateView(LoginRequiredMixin, generic.CreateView):
         form.instance.user = self.request.user
         form.save()
         return super().form_valid(form)
+
+class UserTaskDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView):
+    model = Task
+    template_name = "user_task_delete.html"
+    context_object_name = "task"
+    success_url = reverse_lazy('user_tasks')
+
+    def test_func(self):
+        return self.get_object().user == self.request.user

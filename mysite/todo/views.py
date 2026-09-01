@@ -42,6 +42,11 @@ class UserTaskListView(LoginRequiredMixin, generic.ListView):
 
 class UserTaskCreateView(LoginRequiredMixin, generic.CreateView):
     model = Task
-    fields = ['name', 'content','user','tags', 'status']
+    fields = ['name', 'content','tags', 'status']
     template_name = "user_task_form.html"
     success_url = reverse_lazy('user_tasks')
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        form.save()
+        return super().form_valid(form)

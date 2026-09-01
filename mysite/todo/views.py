@@ -3,12 +3,15 @@ from django.views import generic
 from django.shortcuts import render
 from todo.models import Task
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Create your views here.
 def index(request):
     context = {
     'tasks': Task.objects.all(),
     'num_tasks_not_started': Task.objects.filter(status='n').count(),
+        'num_tasks_completed': Task.objects.filter(status='c').count(),
+        'num_tasks_in_progress': Task.objects.filter(status='p').count(),
     }
     return render(request, template_name='index.html', context=context)
 
@@ -17,3 +20,22 @@ class SignUpView(generic.CreateView):
     form_class = UserCreationForm
     template_name = "signup.html"
     success_url = reverse_lazy('login')
+
+class UserTaskListView(LoginRequiredMixin, generic.ListView):
+    model = Task
+    template_name = "user_tasks.html"
+    context_object_name = "tasks"
+
+    def get_queryset(self):
+        return Task.objects.filter(user=self.request.user)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        tasks = self.get_queryset()
+
+        context['num_tasks_not_started'] = tasks.filter(status='n').count()
+        context['num_tasks_completed'] = tasks.filter(status='c').count()
+        context['num_tasks_in_progress'] = tasks.filter(status='p').count()
+
+        return context

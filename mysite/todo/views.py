@@ -1,6 +1,6 @@
 from django.urls import reverse_lazy
 from django.views import generic
-from django.shortcuts import render
+from django.shortcuts import render, reverse
 from todo.models import Task
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -56,6 +56,18 @@ class UserTaskDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.Delete
     template_name = "user_task_delete.html"
     context_object_name = "task"
     success_url = reverse_lazy('user_tasks')
+
+
+    def test_func(self):
+        return self.get_object().user == self.request.user
+
+class UserTaskUpdateView(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
+    model = Task
+    fields = ['name', 'content', 'tags', 'status']
+    template_name = "user_task_form.html"
+
+    def get_success_url(self):
+        return reverse('user_tasks')
 
     def test_func(self):
         return self.get_object().user == self.request.user
